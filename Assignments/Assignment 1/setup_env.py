@@ -1,14 +1,26 @@
+from os import X_OK
 import random
 
 class Square:
-    def __init__(self, visited, blocked):
+    def __init__(self, x, y, visited, blocked, parent=None, position=None):
+        self.x = x
+        self.y = y
         self.visited = visited
         self.blocked = blocked
         self.is_agent = False
+        self.parent = parent
+        self.position = position
+        self.g = 0
+        self.h = 0
+        self.f = 0
+        self.search_value = 0
+
+    def __eq__(self, other):
+        return self.position == other.position
 
 grid_list = [] #list of 50 grids
 for i in range(50):
-    grid_list.append([[Square(False, False) for x in range(101)] for y in range(101)])
+    grid_list.append([[Square(x, y, False, False) for x in range(101)] for y in range(101)])
 
 for grid in grid_list:
     starting_square = grid[0][0]
