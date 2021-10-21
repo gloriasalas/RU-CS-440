@@ -105,11 +105,13 @@ def main():
         open_list = closed_list = []
         start_state.f = start_state.g + start_state.h
         open_list.append(start_state)
-        open_list.heapify()
+        # open_list.heapify()
         compute_path(open_list, closed_list, counter, goal_state.g)
         if (open_list == []):
             print("I cannot reach the target.")
             return
+        
+        
         
 
         
