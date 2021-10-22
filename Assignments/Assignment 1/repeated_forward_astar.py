@@ -34,6 +34,15 @@ def compute_path(open_list, closed_list, counter, g_s_goal):
                     open_list.remove(a)
                 a.f = a.g + a.h
                 heapq.heappush(open_list, a)
+                
+def backward_path(counter, g_s_goal):
+    temp = [counter]
+    next = dict[counter]
+    while next != g_s_goal:
+        temp.append(next)
+        next = dict[next]
+    temp.append(next)
+    return temp
 
 def main():
     states = []
