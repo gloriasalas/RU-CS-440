@@ -1,6 +1,8 @@
 import heapq
+import math
 import queue
 import setup_env
+from time import time
 
 maze = setup_env.grid_list[0]
 
@@ -18,7 +20,7 @@ def compute_path(open_list, closed_list, counter, g_s_goal):
         action_list.append(left)
         action_list.append(down)
         action_list.append(right)
-        closed_list.append(ss) #may need to check if current element is already in closed list
+        closed_list.append(ss)
         for a in action_list:
             if a in closed_list:
                 continue

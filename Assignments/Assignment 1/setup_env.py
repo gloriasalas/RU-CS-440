@@ -16,6 +16,9 @@ class Square:
 
     def __eq__(self, other):
         return self.position == other.position
+    
+    def __lt__(self, other):
+        return self.f < other.f
 
 grid_list = [] #list of 50 grids
 for i in range(50):
