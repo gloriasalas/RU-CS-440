@@ -1,18 +1,19 @@
 import random
 
 class Square:
-    def __init__(self, x, y, visited, blocked, parent=None, position=None):
+    def __init__(self, x, y, visited, blocked, parent=None):
         self.x = x
         self.y = y
         self.visited = visited
         self.blocked = blocked
         self.is_agent = False
         self.parent = parent
-        self.position = position
+        self.position = (x, y)
         self.g = 0
         self.h = 0
         self.f = 0
         self.search_value = 0
+        self.action_cost = 1
 
     def __eq__(self, other):
         return self.position == other.position
@@ -52,7 +53,7 @@ def draw_grid(grid):
                 grid_string += "\n"
         print(grid_string)
 
-draw_grid(grid_list[0])
+# draw_grid(grid_list[0])
 
 #set variable for gridsize (optional)
 

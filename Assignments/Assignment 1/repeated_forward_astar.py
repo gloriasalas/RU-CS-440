@@ -9,33 +9,34 @@ maze = setup_env.grid_list[0]
 def compute_path(open_list, closed_list, counter, g_s_goal):
     action_list = []
     while(g_s_goal > open_list[0].f):
-        ss = heapq.heappop(open_list[0])
-        if ss in closed_list:
-            return
-        up = maze[ss.x-1][ss.y]
-        left = maze[ss.x][ss.y-1]
-        down = maze[ss.x+1][ss.y]
-        right = maze[ss.x][ss.x+1]
+        node = heapq.heappop(open_list[0])
+        up = maze[node.x-1][node.y]
+        left = maze[node.x][node.y-1]
+        down = maze[node.x+1][node.y]
+        right = maze[node.x][node.x+1]
         action_list.append(up)
         action_list.append(left)
         action_list.append(down)
         action_list.append(right)
-        closed_list.append(ss)
-        for a in action_list:
-            if a in closed_list:
+        closed_list.append(node)
+        for subnode in action_list:
+            if subnode in closed_list:
                 continue
-            if a.search_value < counter:
-                a.g = float('inf')
-                a.search_value = counter
-            if a.g > (ss.g + 1):
-                a.g = ss.g + 1
-                ss.parent = a
-                if a in open_list:
-                    open_list.remove(a)
-                a.f = a.g + a.h
-                heapq.heappush(open_list, a)
+            if subnode.search_value < counter:
+                subnode.g = float('inf')
+                subnode.search_value = counter
+            if subnode.g > (node.g + 1):
+                subnode.g = node.g + subnode.action_cost
+                subnode.parent = node
+                if subnode in open_list:
+                    open_list.remove(subnode)
+                #set h-value for subnode
+                subnode.h = abs(subnode.x - 100) + abs(subnode.y - 100) #100 being the x and y coordinates of the goal
+                subnode.f = subnode.g + subnode.h
+                heapq.heappush(open_list, subnode)
 
 def main():
+    start_time = time()
     states = []
     counter = 0
     start_state = setup_env.grid_list[0][0]
@@ -58,10 +59,22 @@ def main():
             print("I cannot reach the target.")
             return
         #follow tree pointers from s_goal to s_start then move the agent along the resulting path
-        #from s_start to s_goal until it reaches s_goal or one or more action costs on the path
-        #increase;
+        #from s_start to s_goal until it reaches s_goal or one or more action costs on the path increase;
         #set s_start to the current state of the agent (if it moved);
         #update the increased action costs (if any);
+        path = []
+        tree_ptr = goal_state
+        while tree_ptr != start_state:
+            path.append(tree_ptr)
+            tree_ptr = tree_ptr.parent
+        path.append(start_state)
+        path.reverse()
+        for square in path:
+            if (square.blocked):
+                square.action_cost = float('inf')
+                break
+            start_state = square
+        setup_env.draw_grid(maze[0])
     print("I reached the target.")
     return
         
