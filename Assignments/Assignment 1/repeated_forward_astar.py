@@ -35,6 +35,15 @@ def compute_path(open_list, closed_list, counter, g_s_goal):
                 subnode.f = subnode.g + subnode.h
                 heapq.heappush(open_list, subnode)
 
+def backward_path(counter, g_s_goal):
+    temp = [counter]
+    next = dict[counter]
+    while next != g_s_goal:
+        temp.append(next)
+        next = dict[next]
+    temp.append(next)
+    return temp
+
 def main():
     start_time = time()
     states = []
