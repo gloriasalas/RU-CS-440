@@ -9,7 +9,7 @@ class Square:
         self.is_agent = False
         self.parent = parent
         self.position = position
-        self.g = float('inf')
+        self.g = 0
         self.h = 0
         self.f = 0
         self.search_value = 0
