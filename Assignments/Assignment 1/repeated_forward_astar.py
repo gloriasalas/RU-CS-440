@@ -28,7 +28,7 @@ def compute_path(open_list, closed_list, counter, g_s_goal):
                 heapq.heappush(open_list, subnode)
         actions_list = []
 
-def backward_path(counter, g_s_goal):
+def backward_path(dict, counter, g_s_goal):
     temp = [counter]
     next = dict[counter]
     while next != g_s_goal:
