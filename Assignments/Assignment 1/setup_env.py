@@ -15,11 +15,23 @@ class Square:
         self.search_value = 0
         self.action_cost = 1
 
-    def __eq__(self, other):
-        return self.position == other.position
+    # def __eq__(self, other):
+    #     return self.position == other.position
     
     def __lt__(self, other):
         return self.f < other.f
+
+    def expand(self, maze):
+        actions_list = []
+        if self.x+1 < 101:
+            actions_list.append(maze[self.x+1][self.y])
+        if self.x-1 >= 0:
+            actions_list.append(maze[self.x-1][self.y])
+        if self.y+1 < 101:
+            actions_list.append(maze[self.x][self.y+1])
+        if self.y-1 >= 0:
+            actions_list.append(maze[self.x][self.y-1])
+        return actions_list
 
 grid_list = [] #list of 50 grids
 for i in range(50):

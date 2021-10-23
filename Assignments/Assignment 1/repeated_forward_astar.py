@@ -7,19 +7,11 @@ from time import time
 maze = setup_env.grid_list[0]
 
 def compute_path(open_list, closed_list, counter, g_s_goal):
-    action_list = []
     while(g_s_goal > open_list[0].f):
-        node = heapq.heappop(open_list[0])
-        up = maze[node.x-1][node.y]
-        left = maze[node.x][node.y-1]
-        down = maze[node.x+1][node.y]
-        right = maze[node.x][node.x+1]
-        action_list.append(up)
-        action_list.append(left)
-        action_list.append(down)
-        action_list.append(right)
+        node = heapq.heappop(open_list)
+        actions_list = node.expand(maze)
         closed_list.append(node)
-        for subnode in action_list:
+        for subnode in actions_list:
             if subnode in closed_list:
                 continue
             if subnode.search_value < counter:
@@ -34,6 +26,7 @@ def compute_path(open_list, closed_list, counter, g_s_goal):
                 subnode.h = abs(subnode.x - 100) + abs(subnode.y - 100) #100 being the x and y coordinates of the goal
                 subnode.f = subnode.g + subnode.h
                 heapq.heappush(open_list, subnode)
+        actions_list = []
 
 def backward_path(counter, g_s_goal):
     temp = [counter]
@@ -48,8 +41,8 @@ def main():
     start_time = time()
     states = []
     counter = 0
-    start_state = setup_env.grid_list[0][0]
-    goal_state = setup_env.grid_list[100][100]
+    start_state = maze[0][0]
+    goal_state = maze[100][100]
     open_list = []
     closed_list = []
     for s in states:
@@ -60,7 +53,8 @@ def main():
         start_state.search_value = counter
         goal_state.g = float('inf')
         goal_state.search_value = counter
-        open_list = closed_list = []
+        open_list = []
+        closed_list = []
         start_state.f = start_state.g + start_state.h
         heapq.heappush(open_list, start_state)
         compute_path(open_list, closed_list, counter, goal_state.g)
@@ -87,7 +81,8 @@ def main():
     print("I reached the target.")
     return
         
-        
+if __name__ == "__main__":
+    main()
         
 
         
