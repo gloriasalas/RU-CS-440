@@ -4,10 +4,9 @@ import queue
 import setup_env
 from time import time
 
-maze = setup_env.grid_list[0]
-
 def compute_path(open_list, closed_list, counter, g_s_goal):
-    while(g_s_goal > open_list[0].f):
+    saw_end = False
+    while(len(open_list) != 0 and g_s_goal > open_list[0].f and not saw_end):
         node = heapq.heappop(open_list)
         actions_list = node.expand(maze)
         closed_list.append(node)
@@ -17,36 +16,23 @@ def compute_path(open_list, closed_list, counter, g_s_goal):
             if subnode.search_value < counter:
                 subnode.g = float('inf')
                 subnode.search_value = counter
-            if subnode.g > (node.g + 1):
+            if subnode.g > (node.g + subnode.action_cost):
                 subnode.g = node.g + subnode.action_cost
                 subnode.parent = node
-                if subnode in open_list:
-                    open_list.remove(subnode)
-                #set h-value for subnode
-                subnode.h = abs(subnode.x - 100) + abs(subnode.y - 100) #100 being the x and y coordinates of the goal
+                subnode.h = abs(subnode.x - setup_env.max_index) + abs(subnode.y - setup_env.max_index) #setup_env.max_index being the x and y coordinates of the goal
                 subnode.f = subnode.g + subnode.h
                 heapq.heappush(open_list, subnode)
-        actions_list = []
+                if subnode.position == (setup_env.max_index, setup_env.max_index):
+                    saw_end = True
+                break
 
-def backward_path(dict, counter, g_s_goal):
-    temp = [counter]
-    next = dict[counter]
-    while next != g_s_goal:
-        temp.append(next)
-        next = dict[next]
-    temp.append(next)
-    return temp
-
-def main():
+def main(maze):
     start_time = time()
-    states = []
     counter = 0
     start_state = maze[0][0]
-    goal_state = maze[100][100]
+    goal_state = maze[setup_env.max_index][setup_env.max_index]
     open_list = []
     closed_list = []
-    for s in states:
-        s.search_value = 0
     while start_state != goal_state:
         counter += 1
         start_state.g = 0
@@ -73,16 +59,23 @@ def main():
         path.append(start_state)
         path.reverse()
         for square in path:
+            print(square.x, square.y)
             if (square.blocked):
                 square.action_cost = float('inf')
+                start_state = square.parent
                 break
             start_state = square
-        setup_env.draw_grid(maze[0])
     print("I reached the target.")
     return
-        
+
 if __name__ == "__main__":
-    main()
+    maze = ([[setup_env.Square(x, y, False, False) for x in range(setup_env.dimension)] for y in range(setup_env.dimension)])
+    maze[0][0].is_agent = True
+    maze[2][0].blocked = True
+    maze[3][2].blocked = True
+    setup_env.draw_grid(maze)
+    
+    main(maze)
         
 
         
