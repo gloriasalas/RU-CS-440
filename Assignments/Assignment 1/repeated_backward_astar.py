@@ -57,7 +57,7 @@ def main(maze):
             path.append(tree_ptr)
             tree_ptr = tree_ptr.parent
         path.append(start_state)
-        path.reverse()
+        # path.reverse()
         for square in path:
             print(square.x, square.y)
             if (square.blocked):
